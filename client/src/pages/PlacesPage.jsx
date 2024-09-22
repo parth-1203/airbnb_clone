@@ -1,8 +1,37 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import Perks from "../Perks.jsx";
 
 export default function PlacesPage() {
   const { action } = useParams();
-  console.log(action);
+  const [title, setTitle] = useState("");
+  const [address, setAddress] = useState("");
+  const [addedPhotos, setAddedPhotos] = useState([]);
+  const [photoLink, setPhotoLink] = useState("");
+  const [description, setDescription] = useState("");
+  const [perks, setPerks] = useState("");
+  const [extraInfo, setExtraInfo] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [maxGuests, setMaxGuests] = useState("");
+
+  function inputHeader(text) {
+    return <h2 className="text-2xl mt-4">{text}</h2>;
+  }
+
+  function inputDescription(text) {
+    return <p className="text-gray-500 text-sm">{text}</p>;
+  }
+
+  function preInput(header, description) {
+    return (
+      <>
+        {inputHeader(header)}
+        {inputDescription(description)}
+      </>
+    );
+  }
+
   return (
     <div>
       {action !== "new" && (
@@ -15,13 +44,13 @@ export default function PlacesPage() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
-              class="size-6"
+              className="size-6"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15"
               />
             </svg>
@@ -32,21 +61,31 @@ export default function PlacesPage() {
       {action === "new" && (
         <div>
           <form>
-            <h2 className="text-2xl mt-4">Title</h2>
-            <p className="text-gray-500 text-sm">
-              Title for your place. It will be displayed to all
-            </p>
+            {preInput(
+              "Title",
+              "Title for your place. It will be displayed to all"
+            )}
             <input
               type="text"
               placeholder="title for example: My lovely apartment"
+              value={title}
+              onChange={(ev) => setTitle(ev.target.value)}
             />
-            <h2 className="text-xl mt-4">Address</h2>
-            <p className="text-gray-500 text-sm">Address to this place</p>
-            <input type="text" placeholder="address" />
-            <h2 className="text-xl mt-4">Photos</h2>
-            <p className="text-gray-500 text-sm">Add photos of the property</p>
+            {preInput("Address", "Address to this place")}
+            <input
+              type="text"
+              placeholder="address"
+              value={address}
+              onChange={(ev) => setAddress(ev.target.value)}
+            />
+            {preInput("Photos", "Add photos of the property")}
             <div className="flex gap-2">
-              <input type="text" placeholder="Add using link ......jpg" />
+              <input
+                type="text"
+                placeholder="Add using link ......jpg"
+                value={photoLink}
+                onChange={(ev) => setPhotoLink(ev.target.value)}
+              />
               <button className="bg-gray-300 p-2 rounded-2xl flex-grow min-w-[100px]">
                 Add photo
               </button>
@@ -57,44 +96,62 @@ export default function PlacesPage() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
-                  class="size-6"
+                  className="size-6"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
                   />
                 </svg>
                 Upload
               </button>
             </div>
-            <h2 className="text-2xl mt-4">Description</h2>
-            <p className="text-gray-500 text-sm">Description of the place</p>
-            <textarea />
-            <h2 className="text-2xl">Perks</h2>
-            <p className="text-gray-500 text-sm">
-              Select all the perks that apply
-            </p>
-            <label className="flex gap-1 border p-4 rounded-2xl items-center">
-              <input type="checkbox" />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z"
-                />
-              </svg>
-              <span>Wifi</span>
-            </label>
+            {preInput("Description", "Description of the the place")}
+            <textarea
+              value={description}
+              onChange={(ev) => setDescription(ev.target.value)}
+            />
+            {preInput("Perks", "Select all that apply")}
+            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2">
+              <Perks selceted={perks} onChange={setPerks} />
+            </div>
+            <div>
+              {preInput("Extra Info", "House rules, etc")}
+              <textarea value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)}/>
+            </div>
+            <div>
+              {preInput(
+                "Check in and check out timings and max guests",
+                "Enter the check in and check out timings, make sure to have enough time to clean the rooms between guests. Enter max guests."
+              )}
+              <div className="grid sm:grid-cols-3 gap-2">
+                <div>
+                  <h3 className="mt-1 -mb-1">Check in time</h3>
+                  <input type="text" placeholder="14:00" 
+                    value={checkIn}
+                    onChange={ev => setCheckIn(ev.target.value)}
+                  />
+                </div>
+                <div>
+                  <h3 className="mt-1 -mb-1">Check out time</h3>
+                  <input type="text" placeholder="12:00" 
+                    value={checkOut}
+                    onChange={ev => setCheckOut(ev.target.value)}
+                  />
+                </div>
+                <div>
+                  <h3 className="mt-1 -mb-1">Maximum number of guests</h3>
+                  <input type="number" placeholder="4" 
+                    value={maxGuests}
+                    onChange={ev => setMaxGuests(ev.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <button className="primary my-4">Save</button>
           </form>
         </div>
       )}
